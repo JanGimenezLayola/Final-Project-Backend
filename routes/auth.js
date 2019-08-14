@@ -6,7 +6,7 @@ const createError = require('http-errors');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
-const User = require('../models/User.js');
+const User = require('./../models/User');
 
 const {
   isLoggedIn,
@@ -24,13 +24,15 @@ router.post(
   validationLoggin(),
   async (req, res, next) => {
     const { email, password } = req.body;
+    console.log(req.body);
     try {
       const user = await User.findOne({ email });
+      console.log(user);
       if (!user) {
         next(createError(404));
       } else if (bcrypt.compareSync(password, user.password)) {
         req.session.currentUser = user;
-        return res.status(200).json(user);
+        return res.status(200).json();
       } else {
         next(createError(401));
       }
@@ -46,15 +48,16 @@ router.post(
   validationLoggin(),
   async (req, res, next) => {
     const { email, password } = req.body;
+    console.log(req.body);
 
     try {
-      const user = await User.findOne({ email }, 'email');
-      if (user) {
+      const emailfind = await User.findOne({ email }, 'email');
+      if (emailfind) {
         return next(createError(422));
       } else {
         const salt = bcrypt.genSaltSync(10);
         const hashPass = bcrypt.hashSync(password, salt);
-        const newUser = await User.create({ email, password: hashPass });
+        const newUser = await User.create({ password: hashPass, email });
         req.session.currentUser = newUser;
         res.status(200).json(newUser);
       }
