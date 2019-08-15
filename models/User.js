@@ -10,6 +10,10 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  image: {
+    type: String,
+    default: 'http://localhost:4000/images/default-user.png'
   }
 }, {
   timestamps: {
