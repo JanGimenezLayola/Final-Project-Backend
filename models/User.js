@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
 const userSchema = new Schema({
   email: {
@@ -14,6 +15,10 @@ const userSchema = new Schema({
   image: {
     type: String,
     default: 'http://localhost:4000/images/default-user.png'
+  },
+  trips: {
+    type: ObjectId,
+    ref: 'Trip'
   }
 }, {
   timestamps: {
