@@ -16,10 +16,6 @@ const userSchema = new Schema({
   date: {
     type: Date,
     required: true
-  },
-  users: {
-    type: ObjectId,
-    ref: 'User'
   }
 }, {
   timestamps: {

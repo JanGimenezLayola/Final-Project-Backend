@@ -26,7 +26,7 @@ router.post(
     const { email, password } = req.body;
     console.log(req.body);
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }).populate('trips');
       console.log(user);
       if (!user) {
         next(createError(404));

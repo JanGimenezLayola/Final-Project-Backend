@@ -7,6 +7,7 @@ const router = express.Router();
 
 // const User = require('./../models/User');
 const Trip = require('./../models/Trip');
+const User = require('./../models/User');
 
 const {
   isLoggedIn
@@ -18,8 +19,23 @@ router.post('/add', isLoggedIn(), async (req, res, next) => {
   try {
     console.log('hi backend', req.body);
     const newTrip = req.body;
-    const createTrip = Trip.create(newTrip);
+    const createTrip = await Trip.create(newTrip);
+    const userId = req.session.currentUser._id;
+    await User.findByIdAndUpdate(userId, { $push: { trips: createTrip._id } });
+    console.log(createTrip, '--- create trip Backend');
     res.status(200).json(createTrip);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/view', isLoggedIn(), async (req, res, next) => {
+  try {
+    const userId = req.session.currentUser._id;
+    const user = await User.findById(userId).populate('trips');
+    console.log(user);
+
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }

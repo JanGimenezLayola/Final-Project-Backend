@@ -16,10 +16,10 @@ const userSchema = new Schema({
     type: String,
     default: 'http://localhost:4000/images/default-user.png'
   },
-  trips: {
+  trips: [{
     type: ObjectId,
     ref: 'Trip'
-  }
+  }]
 }, {
   timestamps: {
     createdAt: 'created_at',
