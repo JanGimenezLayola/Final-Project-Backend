@@ -16,6 +16,14 @@ const userSchema = new Schema({
   date: {
     type: Date,
     required: true
+  },
+  activities: {
+    type: ObjectId,
+    ref: 'Activity'
+  },
+  budget: {
+    type: ObjectId,
+    ref: 'Budjet'
   }
 }, {
   timestamps: {
