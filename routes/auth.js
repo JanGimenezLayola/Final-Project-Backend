@@ -24,9 +24,9 @@ router.post(
   validationLoggin(),
   async (req, res, next) => {
     const { email, password } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     try {
-      const user = await User.findOne({ email }).populate('trips');
+      const user = await User.findOne({ email });
       console.log(user);
       if (!user) {
         next(createError(404));
