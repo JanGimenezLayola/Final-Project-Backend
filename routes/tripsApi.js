@@ -8,6 +8,7 @@ const router = express.Router();
 // const User = require('./../models/User');
 const Trip = require('./../models/Trip');
 const User = require('./../models/User');
+const Activity = require('./../models/Activity');
 
 const {
   isLoggedIn
@@ -17,12 +18,11 @@ const {
 
 router.post('/add', isLoggedIn(), async (req, res, next) => {
   try {
-    console.log('hi backend', req.body);
     const newTrip = req.body;
     const createTrip = await Trip.create(newTrip);
     const userId = req.session.currentUser._id;
     await User.findByIdAndUpdate(userId, { $push: { trips: createTrip._id } });
-    console.log(createTrip, '--- create trip Backend');
+
     res.status(200).json(createTrip);
   } catch (error) {
     next(error);
@@ -33,9 +33,64 @@ router.get('/view', isLoggedIn(), async (req, res, next) => {
   try {
     const userId = req.session.currentUser._id;
     const user = await User.findById(userId).populate('trips');
-    console.log(user);
-
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/view/:id', isLoggedIn(), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.session.currentUser._id;
+    const user = await User.findById(userId).populate('trips');
+    const userTrip = user.trips.filter((trip) => {
+      if (trip._id == id) {
+        return trip;
+      } else {
+        console.log('Not Found');
+      }
+    });
+    res.status(200).json(userTrip);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/delete/:id', isLoggedIn(), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await Trip.findByIdAndDelete(id);
+    res.status(200).json();
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/addActivity/:id', isLoggedIn(), async (req, res, next) => {
+  const body = req.body;
+  const newActivity = await Activity.create({
+    name: body.object.name,
+    date: body.object.date
+  });
+  console.log('-----------ID---------', body.object.id);
+  console.log('-----------ACTIVITY---------', newActivity);
+  try {
+    const response = await Trip.findOneAndUpdate(body.object.id, { $push: { activities: newActivity._id } });
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/viewActivities/:id', isLoggedIn(), async (req, res, next) => {
+  console.log('------------viewActivities----------------');
+
+  try {
+    const { id } = req.params;
+    const response = await Trip.findById(id).populate('activities');
+    console.log(response);
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }

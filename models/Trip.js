@@ -17,10 +17,10 @@ const userSchema = new Schema({
     type: Date,
     required: true
   },
-  activities: {
+  activities: [{
     type: ObjectId,
     ref: 'Activity'
-  },
+  }],
   budget: {
     type: ObjectId,
     ref: 'Budjet'
