@@ -25,10 +25,10 @@ const userSchema = new Schema({
     type: ObjectId,
     ref: 'Activity'
   }],
-  budget: {
+  budget: [{
     type: ObjectId,
-    ref: 'Budjet'
-  }
+    ref: 'Budget'
+  }]
 }, {
   timestamps: {
     createdAt: 'created_at',
