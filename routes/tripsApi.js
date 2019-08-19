@@ -76,8 +76,18 @@ router.post('/addActivity/:id', isLoggedIn(), async (req, res, next) => {
   console.log('-----------ID---------', body.object.id);
   console.log('-----------ACTIVITY---------', newActivity);
   try {
-    const response = await Trip.findOneAndUpdate(body.object.id, { $push: { activities: newActivity._id } });
+    const response = await Trip.findByIdAndUpdate(body.object.id, { $push: { activities: newActivity._id } });
     res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/deleteActivity/:id', isLoggedIn(), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await Activity.findByIdAndDelete(id);
+    res.status(200).json();
   } catch (error) {
     next(error);
   }
