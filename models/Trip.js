@@ -17,6 +17,10 @@ const userSchema = new Schema({
     type: Date,
     required: true
   },
+  finaldate: {
+    type: Date,
+    required: true
+  },
   activities: [{
     type: ObjectId,
     ref: 'Activity'
