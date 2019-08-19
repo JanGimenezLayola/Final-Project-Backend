@@ -57,26 +57,28 @@ router.get('/view/:id', isLoggedIn(), async (req, res, next) => {
   }
 });
 
-router.delete('/delete/:id', isLoggedIn(), async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    await Trip.findByIdAndDelete(id);
-    res.status(200).json();
-  } catch (error) {
-    next(error);
-  }
-});
+// router.delete('/delete/:id', isLoggedIn(), async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+//     await Trip.findByIdAndDelete(id);
+//     res.status(200).json();
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 router.post('/addActivity/:id', isLoggedIn(), async (req, res, next) => {
   const body = req.body;
+
   const newActivity = await Activity.create({
     name: body.object.name,
     date: body.object.date
   });
-  console.log('-----------ID---------', body.object.id);
-  console.log('-----------ACTIVITY---------', newActivity);
+
   try {
     const response = await Trip.findByIdAndUpdate(body.object.id, { $push: { activities: newActivity._id } });
+    console.log('Soy RESPONSE', response, 'finish');
+
     res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -87,19 +89,20 @@ router.delete('/deleteActivity/:id', isLoggedIn(), async (req, res, next) => {
   try {
     const { id } = req.params;
     await Activity.findByIdAndDelete(id);
-    res.status(200).json();
+    const response = await Activity.find();
+    console.log(response);
+
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }
 });
 
 router.get('/viewActivities/:id', isLoggedIn(), async (req, res, next) => {
-  console.log('------------viewActivities----------------');
-
   try {
     const { id } = req.params;
     const response = await Trip.findById(id).populate('activities');
-    console.log(response);
+    console.log('heeey viewActivities ackend', response);
     res.status(200).json(response);
   } catch (error) {
     next(error);
