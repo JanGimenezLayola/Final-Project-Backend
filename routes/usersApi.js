@@ -21,4 +21,23 @@ router.get('/getUsers', isLoggedIn(), async (req, res, next) => {
   }
 });
 
+router.get('/usersInTrip/:id', isLoggedIn(), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await User.find().populate('trips');
+    const users = user.map((user) => {
+      const tripsId = user.trips.map((trip) => {
+        return trip._id;
+      });
+      if (tripsId.join() === id) {
+        return user;
+      }
+    }
+    );
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

@@ -78,8 +78,6 @@ router.post('/addActivity/:id', isLoggedIn(), async (req, res, next) => {
 
   try {
     const response = await Trip.findByIdAndUpdate(body.object.id, { $push: { activities: newActivity._id } });
-    console.log('Soy RESPONSE', response, 'finish');
-
     res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -91,8 +89,6 @@ router.delete('/deleteActivity/:id', isLoggedIn(), async (req, res, next) => {
     const { id } = req.params;
     await Activity.findByIdAndDelete(id);
     const response = await Activity.find();
-    console.log(response);
-
     res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -109,25 +105,10 @@ router.get('/viewActivities/:id', isLoggedIn(), async (req, res, next) => {
   }
 });
 
-router.get('/usersInTrip/:id', isLoggedIn(), async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const response = await Trip.findById(id).populate('users');
-    console.log('heeey users --> ', response);
-    res.status(200).json(response);
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.put('/addUserToTrip/:userId/:id', isLoggedIn(), async (req, res, next) => {
   try {
     const { userId, id } = req.params;
-    // console.log('Im REQ PARAMS  user Id', userId);
-    // console.log('Im REQ PARAMS  Id', id);
-
     const response = await User.findByIdAndUpdate(userId, { $push: { trips: id } });
-    console.log('heeey users --> ', response);
     res.status(200).json(response);
   } catch (error) {
     next(error);
