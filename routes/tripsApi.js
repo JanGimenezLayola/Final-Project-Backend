@@ -57,15 +57,16 @@ router.get('/view/:id', isLoggedIn(), async (req, res, next) => {
   }
 });
 
-// router.delete('/delete/:id', isLoggedIn(), async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     await Trip.findByIdAndDelete(id);
-//     res.status(200).json();
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+router.delete('/delete/:id', isLoggedIn(), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await Trip.findByIdAndDelete(id);
+    const response = await Trip.find();
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post('/addActivity/:id', isLoggedIn(), async (req, res, next) => {
   const body = req.body;
