@@ -13,7 +13,8 @@ require('dotenv').config();
 
 const auth = require('./routes/auth');
 const tripsApi = require('./routes/tripsApi');
-
+const activitiesApi = require('./routes/activitiesApi');
+const usersApi = require('./routes/usersApi');
 mongoose
   .connect(process.env.MONGODB_URI, {
     keepAlive: true,
@@ -58,6 +59,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', auth);
 app.use('/tripsApi', tripsApi);
+app.use('/activitiesApi', activitiesApi);
+app.use('/usersApi', usersApi);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
