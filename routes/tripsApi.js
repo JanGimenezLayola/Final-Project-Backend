@@ -103,7 +103,31 @@ router.get('/viewActivities/:id', isLoggedIn(), async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await Trip.findById(id).populate('activities');
-    console.log('heeey viewActivities ackend', response);
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/usersInTrip/:id', isLoggedIn(), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const response = await Trip.findById(id).populate('users');
+    console.log('heeey users --> ', response);
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/addUserToTrip/:userId/:id', isLoggedIn(), async (req, res, next) => {
+  try {
+    const { userId, id } = req.params;
+    // console.log('Im REQ PARAMS  user Id', userId);
+    // console.log('Im REQ PARAMS  Id', id);
+
+    const response = await User.findByIdAndUpdate(userId, { $push: { trips: id } });
+    console.log('heeey users --> ', response);
     res.status(200).json(response);
   } catch (error) {
     next(error);
