@@ -108,8 +108,11 @@ router.get('/viewActivities/:id', isLoggedIn(), async (req, res, next) => {
 router.put('/addUserToTrip/:userId/:id', isLoggedIn(), async (req, res, next) => {
   try {
     const { userId, id } = req.params;
-    const response = await User.findByIdAndUpdate(userId, { $push: { trips: id } });
-    res.status(200).json(response);
+    const user = await User.findById(userId);
+    if (!user.trips.includes(id)) {
+      await User.findByIdAndUpdate(userId, { $push: { trips: id } });
+    }
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
