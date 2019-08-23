@@ -18,7 +18,7 @@ const userSchema = new Schema({
   },
   image: {
     type: String,
-    default: 'http://localhost:4000/images/default-user.png'
+    default: 'https://www.uic.mx/posgrados/files/2018/05/default-user.png'
   },
   trips: [{
     type: ObjectId,
